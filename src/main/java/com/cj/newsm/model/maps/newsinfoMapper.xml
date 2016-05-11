@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cj.newsm.model.newsinfoMapper">
+
+	<resultMap type="NewsInfo" id="NewsResultMap">
+		<id property="id" column="id" />
+		<result property="title" column="title" />
+	</resultMap>
+
+	
+	<!-- 查询新闻列表 -->
+	<select id="getNewsAll" resultType="list" resultMap="NewsResultMap">  
+        <![CDATA[ 
+            SELECT * from tb_news_info
+        ]]>
+	</select>
+
+	<!-- 根据title查询新闻信息 -->
+	<select id="getNewsByT" parameterType="String" resultType="list"
+		resultMap="NewsResultMap">
+        
+            SELECT * FROM tb_news_info where title like  #{title}
+           
+         
+
+	</select>
+
+</mapper>  

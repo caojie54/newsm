@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+<meta name="description" content="">
+<meta name="author" content="">
+
+<title>新闻内容管理</title>
+
+<link href="/newsm/assets/css/bootstrap.min.css" rel="stylesheet">
+<link href="/newsm/assets/css/dashboard.css" rel="stylesheet">
+<!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+<!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+<script src="/newsm/assets/js/ie-emulation-modes-warning.js"></script>
+
+<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+      <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet"
+	href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/bootstrap-table.min.css">
+
+
+
+<style>
+.float {
+	float: left;
+}
+</style>
+</head>
+
+<body>
+
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+					aria-controls="navbar">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#">新闻管理应用</a>
+			</div>
+			<div id="navbar" class="navbar-collapse collapse">
+				<div class="navbar-form navbar-right">
+					<input type="text" class="form-control" id="searchContent"
+						placeholder="查询...">
+				</div>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-sm-3 col-md-2 sidebar">
+				<ul class="nav nav-sidebar">
+					<li><a href="/newsm/newscategory/list">新闻分类 <span
+							class="sr-only">(current)</span></a></li>
+					<li class="active"><a href="#">新闻内容</a></li>
+				</ul>
+			</div>
+			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+				<h1 class="page-header">新闻列表</h1>
+
+				<h2 class="sub-header">
+					<a data-toggle="modal" href="add" data-target="#add-form-modal"
+						class="btn btn-success">添加</a>
+
+				</h2>
+
+				<div class="table-responsive">
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th>编号</th>
+								<th>新闻分类</th>
+								<th>标题</th>
+								<th>作者</th>
+								<th>来源</th>
+								<th>发布时间</th>
+								<th>操作</th>
+							</tr>
+						</thead>
+						<tbody>
+							<%for(currentnews in news){%>
+							<tr>
+								<td>${currentnews.id}</td>
+								<td>${currentnews.category_id}</td>
+								<td>${currentnews.title}</td>
+								<td>${currentnews.author}</td>
+								<td>${currentnews.source}</td>
+								<td>${currentnews.display_time}</td>
+								<td><a data-val="${currentnews.id}" href="javascript: "
+									class="btn btn-danger deleteThis">删除</a> <a data-toggle="modal"
+									href="modify?id=${currentnews.id}"
+									data-target="#modify-form-modal"
+									class="btn btn-info modifyThis">修改</a></td>
+							</tr>
+							<%}%>
+						</tbody>
+					</table>
+				</div>
+				<div class="container" style="width: 100%;">
+
+					<button id="deleteButton" class="btn btn-danger">删除</button>
+					<button id="modifyButton" class="btn btn-info">修改</button>
+					<table id="table" data-toggle="table" data-method="get"
+						data-url="newsjson" data-height="400"
+						data-side-pagination="server" data-pagination="true"
+						data-page-list="[5, 10, 20, 50, 100, 200]" data-search="true">
+						<thead>
+							<tr>
+								<th data-field="state" data-checkbox="true"></th>
+								<th data-field="id">ID</th>
+								<th data-field="category_id">新闻类别</th>
+								<th data-field="title">title</th>
+								<th data-field="author">作者</th>
+								<th data-field="source">来源</th>
+								<th data-field="content">新闻内容</th>
+								<th data-field="display_time">创建时间</th>
+							</tr>
+						</thead>
+
+
+					</table>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 弹出对话框 START -->
+	<!-- add对话框 -->
+	<div class="modal fade" id="add-form-modal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title">添加新闻</h4>
+				</div>
+				<div class="modal-body"></div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
+
+	<!-- modify对话框 -->
+	<div class="modal fade" id="modify-form-modal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title">修改新闻</h4>
+				</div>
+				<div id="modify-modal" class="modal-body"></div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
+
+	<!-- 弹出对话框 END -->
+
+	<!-- Bootstrap core JavaScript -->
+	<script src="/newsm/assets/js/jquery.min.js"></script>
+	<script src="/newsm/assets/js/bootstrap.min.js"></script>
+	<script src="/newsm/assets/js/ie10-viewport-bug-workaround.js"></script>
+
+	<!-- Latest compiled and minified JavaScript -->
+	<script
+		src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/bootstrap-table.min.js"></script>
+
+	<!-- Latest compiled and minified Locales -->
+	<script
+		src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.1/locale/bootstrap-table-zh-CN.min.js"></script>
+</body>
+<script>
+	var $table = $('#table');
+
+	$(function() {
+
+	});
+	$(function() {
+		//bootstrap table 删除操作
+		$("#deleteButton").on(
+				"click",
+				function() {
+					var deid = $.map($table.bootstrapTable('getSelections'),
+							function(row) {
+								//返回了一个数组 
+								return row.id;
+							});
+					if (confirm("你确定要删除编号为" + deid + "的新闻吗？")) {
+						//for in 循环删除所有被选中的新闻
+						for (x in deid) {
+							//转换deid[x]为数字类型
+							var deleteid = parseInt(deid[x]);
+							//post请求到后台deleteNews，接收数字类型参数did
+							$.post("deleteNews", {
+								did : deleteid
+							}, function(data, status) {
+
+								if (data == "ok") {
+									alert("删除成功");
+									//在前台删除，
+									$table.bootstrapTable('remove', {
+										field : 'id',
+										values : deid
+									});
+								} else {
+									alert("删除失败");
+								}
+
+							});
+						}
+					}
+
+				});
+
+		//bootstrap table 更新操作
+		$("#modifyButton").on(
+				"click",
+				function() {
+					//return 一个所有被选中的数组
+					var deid = $.map($table.bootstrapTable('getSelections'),
+							function(row) {
+								//返回了一个数组 
+								return row.id;
+							});
+					for (x in deid) {
+						var modifyNum = parseInt(deid[x]);
+						//url
+						var thisurl="modify?id="+modifyNum;
+						$.get(thisurl,function(data){
+							//把页面内容加载到模态对话框中
+							$("#modify-modal").html(data);
+							$("#modify-form-modal").modal("show");
+						});
+					}
+					
+
+				});
+
+	});
+
+	//删除操作
+	$(function() {
+		$(".deleteThis").on("click", function() {
+			var deleteid = $(this).attr("data-val");
+			if (confirm("你确定要删除吗？")) {
+				$.post("deleteNews", {
+					did : deleteid
+				}, function(data, status) {
+
+					if (data == "ok") {
+						alert("删除成功");
+					} else {
+						alert("删除失败");
+					}
+
+				});
+			}
+
+		});
+	});
+	//提交搜索内容
+	$("#searchContent").keydown(function(event) {
+		if (event.which == 13) {
+			//window.location.href="searchContent?content="+$("#searchContent").val();
+			window.location.href = "list?t=" + $("#searchContent").val();
+		}
+	});
+</script>
+</html>

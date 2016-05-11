@@ -1,0 +1,42 @@
+<div class="container" style="width:80%;">
+  <div class="row">
+	<form id="modify-newsinfo-form">
+	  <input type="hidden"  name="id" value="${newsinfo.id}"/>
+ 	  <div class="form-group">
+	    <label for="title">标题</label>
+	    <input type="text" class="form-control" name="title" id="title" value="${newsinfo.title}">
+	  </div>
+	  <div class="form-group">
+	    <label for="author">作者</label>
+	    <input type="text" class="form-control" name="author" id="author" value="${newsinfo.author}">
+	  </div>
+	  <div class="form-group">
+	    <label for="source">来源</label>
+	    <input type="text" class="form-control" name="source" id="source" value="${newsinfo.source}">
+	  </div>
+	  <div class="form-group">
+	    <label for="content">新闻内容</label>
+	    <textarea id="content" name="content" class="form-control" rows="8">${newsinfo.content}</textarea>
+	  </div>
+	  
+	  <button id="editbtn" type="button" class="btn btn-default">提交</button>
+	</form>
+  </div>
+</div>
+<script>
+$(function(){
+	$('#editbtn').on('click',function(){
+		
+		$.post('modifyNews',$("#modify-newsinfo-form").serialize(),function(data,status){
+			if( data=="ok" ){
+				alert('修改成功');
+				$('#modify-form-modal').modal('hide');
+				$("#table").bootstrapTable('refresh');
+			}else{
+				alert('修改失败');
+			}
+		}); 
+		
+	});
+});
+</script>
